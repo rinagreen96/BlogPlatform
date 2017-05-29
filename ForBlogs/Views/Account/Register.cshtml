@@ -1,0 +1,284 @@
+﻿@model ForBlogs.Models.RegisterModel
+
+@{
+    ViewBag.Title = "Registration";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/ForUpload.css")" />
+    
+    
+}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea', forced_root_block: '', plugins: "paste",
+        paste_remove_spans: true,
+        paste_remove_styles: true
+    });
+</script>
+
+<style>
+    .table {
+        font-family: "Lucida Grande", sans-serif;
+        width: 100%;
+        position: relative;
+        border-left-color: #222222;
+        border-top-color: #222222;
+        border-bottom-color: #222222;
+        border-right-color: #222222;
+    }
+    .table td, .table tr {
+        padding: 10px;
+        font-style: normal;
+        font-weight: bolder;
+        text-align: center;
+        font-size: large;
+    }
+    .btn {
+        background: #222222;
+        color: white;
+        object-position: center;
+    }
+    .table caption {
+        background: #222222;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,.3);
+        color: white;
+        font-family: "Roboto Slab",serif;
+        font-style: normal;
+        font-size: 26px;
+        text-align: center;
+        margin: 0;
+    }
+</style>
+
+<h2>Welcome to BYL!</h2>
+
+
+@using (Html.BeginForm("Register","Account",FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+
+        <table class="table col-md-12">
+            <caption>Registration Form</caption>
+            <tbody>
+                <tr>
+                    <td rowspan="8" style="width:35%">
+                        <div>
+                            <img height="360" style="position: relative; padding-top:25px" id="image" src="~/Images/ForSite/default.png" alt="" />
+                        </div>
+                    </td>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                            
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                                @Html.ValidationMessageFor(model => model.Password)
+</div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.Sername, "Surname", htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            @Html.EditorFor(model => model.Sername, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                            @Html.ValidationMessageFor(model => model.Sername)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div class="nickname" id="nick">
+                            @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red" class=".nickmessage">
+                            @Html.ValidationMessageFor(model => model.Nickname)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                            @Html.ValidationMessageFor(model => model.City)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:10%">
+                        <div>
+                           @Html.LabelFor(model => model.Avatar_path, "Avatar", htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:25%">
+                        <div>
+                            <div class="fileform" style="display:inline-block">
+                                <div class="selectbutton" style="display:inline-block; font-weight:normal">Search</div>
+                                <input accept="image/*" style="display:inline-block" id="upload" type="file" name="upload" />
+                            </div>
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div style="font-weight:normal; color:red">
+                            @Html.ValidationMessageFor(model => model.Avatar_path)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        @*<div>*@
+                        @Html.LabelFor(model => model.Info, "Personal information", htmlAttributes: new { @class = "control-label" })
+                        @*</div>*@
+                    </td>
+                </tr>
+
+                <tr style="width: 100%">
+                    <td colspan="4">
+                        <textarea name="info" class="textarea" cols="1000"></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        @*<div>*@
+                        <input type="submit" value="Register" class="btn btn-default" />
+                        @*</div>*@
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+@section Scripts{
+    <script type="text/javascript">
+        function readURL(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#upload").change(function () {
+            readURL(this);
+        });
+
+        </script>
+<script type="text/javascript">
+        $(".nickname").focusout(function () {
+
+            var url = "@Url.Action("CheckNickname"/*имя экшина*/, "Account"/*имя контроллера*/)";
+            var nick = document.getElementById("Nickname").value;//$('div:eq(4)').val();
+            $.ajax({
+                type: "POST",
+                data: { "nick": nick },
+                url: url,
+                success: function (result) {
+                    if (result != "") {
+                        alert(result + " Please, choose another nick!");
+                    }
+                }
+            });
+        });
+</script>
+}

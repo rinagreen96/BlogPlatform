@@ -1,0 +1,179 @@
+﻿@model ForBlogs.Models.BlogEditModel
+
+@{
+    ViewBag.Title = "Edit your blog";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+        <link href="@Url.Content("~/Content/jquery.bxslider.css")" rel="stylesheet">
+}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea', forced_root_block: '', plugins: "paste",
+        paste_remove_spans: true,
+        paste_remove_styles: true
+    });</script>
+<h2>Edit your blog</h2>
+
+<div class="form-horizontal">
+    @Html.AntiForgeryToken()
+    <h4>@Model.BlogName</h4>
+    <hr />
+    @Html.ValidationSummary(true)
+
+    <div class="col-md-12">
+        <form method="post" action="/Blog/EditDescription">
+            <table class="table_blog col-md-12" style="width:100%">
+                <tr>
+                    <td style="width:25%">
+                        @Html.LabelFor(model => model.BlogName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.HiddenFor(model => model.BlogId)
+                    </td>
+                    <td style="width:25%">
+                        @Html.EditorFor(model => model.BlogName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BlogName, "", new { @class = "text-danger" })
+                    </td>
+                    <td style="width:25%">
+                        @Html.LabelFor(model => model.CategoryName, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+                    </td>
+                    <td style="width:25%">
+                        @{
+                            List<SelectListItem> list = new List<SelectListItem>();//Список значений для DDL
+                            foreach (var category in ViewBag.Categories)
+                            {
+                                list.Add(new SelectListItem() { Text = category.category_name });//Заполняем его
+                            }
+                        }
+                        @Html.DropDownListFor(model => model.CategoryName, list, htmlAttributes: new { @class = "form-control" })
+                    </td>
+                </tr>
+            </table>
+            <pre style="object-position: center;
+    position: center;
+    font-size: medium;
+    font-style: italic;
+    text-align: center;
+    font-family: Lucida Grande, sans-serif;
+    background: rgba(0, 0, 0, 0.00);
+    resize: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        border-top: none;">@Html.Raw(Model.BlogDescription)</pre>
+            @*<textarea rows="10" wrap="hard" name="text">@Model.BlogDescription</textarea>*@
+            @Html.TextAreaFor(model => model.BlogDescription, new { htmlAttributes = new { @class = "form-control" } })
+            <input type="hidden" value="@Model.BlogId" name="blog_id" /> 
+            <br/>
+            <p style="text-align:center">
+                <input type="submit" class="btn" value="Save" style="display:inline-block"/>
+            </p>
+        </form>
+    </div>
+    <div class="form-horizontal">
+        <table class="table_blog col-md-12" style="width:100%">
+            <caption>Atricles</caption>
+            @if (Model.articles.Count() != 0)
+            {
+                int counter = Model.articles.Count() - 1;
+                foreach (var article in Model.articles.Reverse().ToList())
+                {
+                    string status = "";
+                    string color = "";
+                    switch(article.Status_of_ArticleId)
+                    {
+                        case (1): {
+                                status = "Approved";
+                                color = "green";
+                                break;
+                            }
+                        case (2):
+                            {
+                                status = "Notapproved yet";
+                                color = "blue";
+                                break;
+                            }
+                        case (3):
+                            {
+                                status = "Rejected";
+                                color = "red";
+                                break;
+                            }
+                    }
+                        <tr>
+                            <td width="100%" colspan="2">
+                                <pre style="font-weight: bolder; font-size: x-large; text-align:center" class="title"> @article.title<font color=@color> @status</font></pre>
+                                <div style="font-weight:200; padding-left:25px;padding-right:25px"><p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto; font-weight:normal">@Html.Raw(article.text)</p></div>                         
+                            </td>
+                            </tr>
+                    if (article.ImagesPaths != null)
+                    {
+                        if (article.ImagesPaths.Count() != 0)
+                        {
+                            <tr>
+                                <td width="100%" colspan="2">
+                                    <ul class="bxslider">
+                                        @foreach (var image in article.ImagesPaths)
+                    {
+                                            <li style="position:center"><img style="display:inline-block; height: 400px; overflow: hidden" src="@Url.Content(image)" /></li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+            }
+                            <tr>
+                            <td width="50%" >
+                                <form method="get" action="/Article/GoToArticle">
+                                    <input type="hidden" name="article_id" value="@article.ArticleId">
+                                    <input type="hidden" name="user_id" value="@ViewBag.UserId" >
+                                    <input type="submit" value="Edit" class="btn" align="right">
+                                </form>
+                            </td>
+                            <td width="50%" >
+                                <form method="post" action="/Article/DeleteArticle">
+                                    <input type="hidden" name="article_id" value="@article.ArticleId">
+                                    <input type="hidden" name="blog_id" value="@Model.BlogId" >
+                                    <input type="submit" value="Delete" class="btn">
+                                </form>
+                            </td>
+                        </tr>
+                    counter--;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        <div> There are no articles in this blog </div>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="2">
+                    <form method="get" action="/Blog/AddArticle">
+                        @Html.HiddenFor(model => model.BlogName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.HiddenFor(model => model.BlogId, new { htmlAttributes = new { @class = "form-control" } })
+                        <input type="submit" value="Add Article" class="btn" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to Blogs", "Index", new { UserId = ViewBag.UserId, UserNick = ViewBag.UserNick }, new { style = "color:black" })
+</div>
+@section Scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery.bxslider.min.js")"></script>
+    <script>
+    $(document).ready(function () {
+        $('.bxslider').bxSlider({
+                        minSlides: 1,
+            maxSlides: 1,
+            slideMargin: 10
+        });
+                });
+    </script>
+}

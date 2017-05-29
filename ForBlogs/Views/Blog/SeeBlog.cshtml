@@ -1,0 +1,118 @@
+﻿@model ForBlogs.Models.BlogEditModel
+
+@{
+    ViewBag.Title = "SeeBlog";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+    <link href="@Url.Content("~/Content/jquery.bxslider.css")" rel="stylesheet">
+}
+
+<h2>@Model.BlogName</h2>
+
+<div class="col-md-offset-10">
+    <form method="post" action="/Blog/SearchByTags">
+        <input type="hidden" name="blog_id" value="@Model.BlogId" />
+        <input type="text" name="all_tags" />
+        <input type="submit" class="btn btn-default" value="Search by tags" />
+    </form>
+</div>
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="col-md-12">
+        <pre style="object-position: center;
+    position: center;
+    font-size: medium;
+    font-style: italic;
+    text-align: center;
+    font-family: Lucida Grande, sans-serif;
+    background: rgba(0, 0, 0, 0.00);
+    resize: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        border-top: none;">@Html.Raw(Model.BlogDescription)</pre>
+    </div>
+    <div class="col-md-12">
+        <table class="table_blog col-md-12" style="width:100%">
+            <caption>Atricles</caption>
+            @if (Model.articles.Where(x=>x.Status_of_ArticleId==1).Count() != 0)
+            {
+                int counter = Model.articles.Count() - 1;
+                foreach (var article in Model.articles.Reverse().ToList())
+                {
+                    if (article.Status_of_ArticleId == 1)
+                    {
+                        <tr>
+
+                            <td width="100%" colspan="2">
+                                <pre style="font-weight: bolder; font-size: x-large; text-align:center" class="title">@article.title</pre>
+                                <div style="font-weight:200; padding-left:25px;padding-right:25px">
+                                    <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto; font-weight:normal">@Html.Raw(article.text)</p>
+                                    </div>
+
+</td>
+                        </tr>
+                        if (article.ImagesPaths != null)
+                        {
+                            if (article.ImagesPaths.Count() != 0)
+                            {
+                                <tr>
+                                    <td width="100%" colspan="2">
+                                        <ul class="bxslider">
+                                            @foreach (var image in article.ImagesPaths)
+                                            {
+                                                <li style="position:center"><img style="display:inline-block; height: 400px; overflow: hidden" src="@Url.Content(image)" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        <tr>
+                            <td>
+                                @using (Html.BeginForm("SeeArticle", "Article"))
+                                {
+                                    <input type="hidden" name="article_id" value="@article.ArticleId" />
+                                    <input type="hidden" name="article_user_id" value="@article.UserId" />
+                                    <input type="hidden" name="current_user_name" value="@User.Identity.Name" />
+                                    <input type="submit" value="See more" class="btn btn-default" style="background: #222222; color: white; object-position: center">
+                                }
+                            </td>
+                        </tr>
+                    }
+                    counter--;
+                }
+            }
+
+            else
+            {
+                <tr>
+                    <td>
+                        <div> There are no articles in this blog yet...</div>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+
+<div style="text-decoration-color: black">
+    @Html.ActionLink("Back to Blogs", "SeeAllBlogs", new { }, new { style = "color:black" })
+</div>
+@section Scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery.bxslider.min.js")"></script>
+    <script>
+    $(document).ready(function () {
+        $('.bxslider').bxSlider({
+            minSlides: 1,
+            maxSlides: 1,
+            slideMargin: 10
+        });
+    });
+    </script>
+}
+

@@ -1,0 +1,152 @@
+﻿@model ForBlogs.Models.BlogInfoModel
+
+@{
+    ViewBag.Title = "Blogs";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+        <link href="@Url.Content("~/Content/jquery.bxslider.css")" rel="stylesheet">
+}
+<html>
+<body>
+    <h2>Your blogs</h2>
+
+    <div>
+
+        @if (Model.BlogIds.Count() == 0)
+        {
+            <div>You don't have blogs yet...</div>
+            <p>
+                @Html.ActionLink("Create", "Create", "Blog", new { user_id = Model.UserId, user_nick = Model.UserNick }, new { style = "color:black" })
+            </p>
+        }
+        else
+        {
+            int counter = 0;
+            <table class="table_blog">
+                <caption>Blogs</caption>
+                <tr>
+                    <td>Category</td>
+                    <td>Blog</td>
+                    <td>Updated</td>
+                    <td colspan="2">Action</td>
+                </tr>
+                @foreach (var name in Model.BlogCategoryDate)
+                {
+                    <tr>
+                        <td style="width:25%">
+                            @Html.Label(name.Item2)
+                            <div class="blog-id">@Html.HiddenFor(model => model.BlogIds[counter])</div>
+                            <div class="user-id">@Html.HiddenFor(model => model.UserId)</div>
+                        </td>
+                        <td style="width:25%">
+                            @Html.Label(name.Item1)
+                        </td>
+                        <td style="width:30%">
+                            @Html.DisplayFor(model => name.Item3)
+                        </td>
+                        <td style="width:10%">
+                            <form method="post" action="/Blog/EditBlog">
+
+                                <input type="hidden" name="blog_id" value="@Model.BlogIds[counter]">
+                                <input type="hidden" name="user_id" value="@Model.UserId">
+                                <input type="submit" value="Edit" class="btn">
+
+                            </form>
+                        </td>
+                        <td style="width:10%">
+                            <form method="post" action="/Blog/DeleteBlog">
+
+                                <input type="hidden" name="blog_id" value="@Model.BlogIds[counter]">
+                                <input type="hidden" name="user_id" value="@Model.UserId">
+                                <input type="submit" value="Delete" class="btn">
+
+                            </form>
+                        </td>
+                    </tr>
+
+                    counter++;
+                }
+                <tr>
+                    <td colspan="5">
+                        <form action="/Blog/Create">
+                            <input type="hidden" name="user_id" value="@Model.UserId">
+                            <input type="hidden" name="user_nick" value="@Model.UserNick">
+                            <input type="submit" value="Create blog" class="btn btn-default" />
+                        </form>
+                    </td>
+                </tr>
+                @if (ViewBag.Interesting != null)
+                {
+
+                    <tr>
+                        <td colspan="5" style="font-style:italic; font-size: x-large; font-weight:bolder; text-align:left">It can be interesting for you...</td>
+                    </tr>
+                    foreach (var article in ViewBag.Interesting)
+                    {
+                        <table class="table_blog col-md-12" style="width:100%">
+
+                            <tbody>
+                                <tr>
+
+                                    <td width="100%" colspan="2">
+                                        <pre style="font-weight: bolder; font-size: x-large; text-align:center" class="title">@article.title</pre>
+                                        <div style="font-weight:200; padding-left:25px;padding-right:25px">
+                                            <p style="-moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto">@Html.Raw(article.text)</p>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                @if (article.ImagesPaths != null)
+                                {
+                                if (article.ImagesPaths.Count != 0)
+                                {
+                                <tr>
+                                    <td width="100%" colspan="2">
+                                        <ul class="bxslider">
+                                            @foreach (var image in article.ImagesPaths)
+                                            {
+                                                <li style="position:center"><img style="display:inline-block; height: 400px; overflow: hidden" src="@Url.Content(image)" /></li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                                }
+                                }
+
+
+                                <tr>
+                                    <td>
+                                        @using (Html.BeginForm("SeeArticle", "Article"))
+                                        {
+                                            <input type="hidden" name="article_id" value="@article.ArticleId" />
+                                                    <input type="hidden" name="article_user_id" value="@article.UserId" />
+                                                    <input type="hidden" name="current_user_name" value="@User.Identity.Name" />
+                                                    <input type="submit" value="See more" class="btn btn-default" style="background: #222222; color: white; object-position: center">
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+
+                }
+
+                
+            </table>
+        }
+</div>
+    <div class="col-md-offset-10" style="text-align:right">@Html.ActionLink("See all Blogs", "SeeAllBlogs", "Blog", new { style = "color:black" })</div>
+@section Scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery.bxslider.min.js")"></script>
+    <script>
+    $(document).ready(function () {
+        $('.bxslider').bxSlider({
+            minSlides: 1,
+            maxSlides: 1,
+            slideMargin: 10
+        });
+    });
+    </script>
+}
+</body>
+</html>

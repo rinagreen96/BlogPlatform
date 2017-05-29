@@ -1,0 +1,116 @@
+﻿
+.table_blog {
+    font-family: "Lucida Grande", sans-serif;
+    width: 100%;
+    position: relative;
+    border-collapse: collapse;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-right-color: transparent;
+    border-width: medium;
+}
+
+    .table_blog caption {
+        background: #222222;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,.3);
+        color: white;
+        font-family: "Roboto Slab",serif;
+        font-style: normal;
+        font-size: 26px;
+        text-align: center;
+        margin: 0;
+    }
+
+    .table_blog td, .table_blog tr {
+        padding: 10px;
+        font-style: normal;
+        font-weight: normal;
+        text-align: center;
+        font-size: large;
+    }
+
+    .table_blog p {
+        font-weight: normal;
+    }
+
+        .table_blog th {
+            text-align: center;
+            font-size: 18px;
+        }
+
+    .table_blog tr:nth-child(2n) {
+        background: rgba(0, 0, 0, 0.00);
+    }
+
+    .table_blog td:last-of-type {
+        text-align: center;
+        
+    }
+
+    .table_blog a {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #222222;
+        position: relative;
+        text-decoration-color: white;
+        color: white;
+    }
+
+    .table_blog pre {
+        resize: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        border-top: none;
+        object-position: center;
+        position: center;
+        font-size: small;
+        text-align: center;
+        font-family: "Lucida Grande", sans-serif;
+        background: rgba(0, 0, 0, 0.00);
+    }
+.btn {
+    background: #222222;
+    color: white;
+    object-position: center;
+}
+ .table {
+    font-family: "Lucida Grande", sans-serif;
+    width: 100%;
+    position: relative;
+    border-left-color: #222222;
+    border-top-color: #222222;
+    border-bottom-color: #222222;
+    border-right-color: #222222;
+}
+
+.table td, .table tr {
+    padding: 10px;
+    font-style: normal;
+    font-weight: normal;
+    text-align: center;
+    font-size: large;
+}
+
+.table caption {
+    background: #222222;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.3);
+    color: white;
+    font-family: "Roboto Slab",serif;
+    font-style: normal;
+    font-size: 26px;
+    text-align: center;
+    margin: 0;
+}
+
+
+
+

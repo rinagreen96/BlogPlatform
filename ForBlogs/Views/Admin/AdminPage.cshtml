@@ -1,0 +1,135 @@
+﻿@model IEnumerable<ForBlogs.Models.UserModel>
+
+@{
+    ViewBag.Title = "AdminPage";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+}
+
+<style>
+    .Change, .btn{
+        background: #222222;
+        color: white;
+        object-position: center;
+    }
+
+    .table td, .table tr {
+        padding: 10px;
+        font-style: normal;
+        text-align: center;
+        font-size: large;
+        position: relative;
+    }
+
+    .table th{
+        text-align:center;
+    }
+</style>
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js">
+</script>
+<h2></h2>
+
+<p style="font-style: italic; font-size: xx-large ">
+    Current users
+</p>
+<table id="table" class="table">
+    <thead>
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                Current Role
+            </th>
+            <th>
+                New Role
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        <div class="current_role" id="current_role">@Html.DisplayFor(modelItem => item.RoleName)</div>
+                    </td>
+
+                    <td>
+                        <input type="hidden" name="user_id1" id="user_id1" class="user_id1" value="@item.UserID" />
+                        <select name="role">
+                            <option value="moderator" selected>moderator</option>
+                            <option value="user">user</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="submit" value="Change Role" class="Change btn">
+                    </td>
+
+                    <td>
+                        <form method="post" action="/Admin/DeleteUser">
+
+                            <input type="hidden" name="user_id" id="user_id" class="user_id" value="@item.UserID" />
+                            <input type="submit" value="Delete" class="btn">
+
+                        </form>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
+@* Load datatable css *@
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+@* Load datatable js *@
+@section Scripts{
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table').DataTable({
+                columns: [
+                    {
+                        title: "Email",
+                        "searchable": true
+                    },
+                    {
+                        title: "Current Role",
+                        "searchable": true
+                    },
+                    {
+                        title: "New Role",
+                        "searchable": false
+                    },
+                    {
+                        title: "",
+                        "searchable": false
+                    }
+                ]
+            });
+        });
+
+            $(".Change").click(function () {
+
+                var url = "@Url.Action("ChangeRole"/*имя экшина*/, "Admin"/*имя контроллера*/)";
+                var user_id = $(this).parent().parent().find(".user_id1").val();//$('div:eq(4)').val();
+                var new_role = $(this).parent().parent().find("select").val();//$("form select[name=items] option:selected").val(); $("form select[userEmail=Email] option:selected").val();
+                $(this).parent().parent().find(".current_role").text(new_role);
+                $.ajax({
+                    data: { "user_id": user_id, "new_role": new_role },
+                    url: url,
+                    success: function (result) {
+                    }
+                })
+            });
+
+    </script>
+}

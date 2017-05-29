@@ -1,0 +1,167 @@
+﻿@model ForBlogs.Models.ArticleModel
+
+@{
+    ViewBag.Title = "ReadArticle";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+    <link href="@Url.Content("~/Content/jquery.bxslider.css")" rel="stylesheet">
+}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+<script>
+tinymce.init({
+        selector: 'textarea', forced_root_block: '', plugins: "paste",
+        paste_remove_spans: true,
+        paste_remove_styles: true});</script>
+<style>
+    .pre {
+        object-position: center;
+        position: center;
+        font-size: medium;
+        font-style: italic;
+        text-align: center;
+        font-family: Lucida Grande, sans-serif;
+        background: rgba(0, 0, 0, 0.00);
+        resize: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: none;
+        border-left: none;
+        border-top: none;
+    }
+</style>
+
+<h2>Read this article</h2>
+
+    <hr />
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="col-md-4" style="position:center">
+                        @Html.HiddenFor(model => model.ArticleId, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.HiddenFor(model => model.BlogId, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.HiddenFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+            <table class="table_blog col-md-12" style="width:100%">
+                <caption>@Model.title</caption>
+                <tbody class="col-md-12">
+                    
+                    <tr>
+                        <td width="100%" style="text-align:center">
+                            <div style="font-weight:200; padding-left:25px;padding-right:25px; text-align:center">
+                                <p style="text-align:center; -moz-hyphens: auto;-webkit-hyphens: auto;-ms-hyphens: auto">@Html.Raw(Model.text)</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @if (Model.ImagesPaths != null)
+                    {
+                        if (Model.ImagesPaths.Count() != 0)
+                        {
+                            <tr>
+                                <td width="100%">
+                                    <ul class="bxslider">
+                                        @foreach (var image in Model.ImagesPaths)
+                                        {
+                                            <li style="position:center"><img style="display:inline-block; height: 400px; overflow: hidden" src="@Url.Content(image)" /></li>
+                                        }
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                    }
+                   
+                </tbody>
+            </table>
+
+            <div>
+                <h3>Comments</h3>
+                @if (Model.comments != null)
+                {
+                    if (Model.comments.Count() != 0)
+                    {
+                        foreach (var comment in Model.comments)
+                        {
+                            if (comment.Item5 == 1)
+                            {
+                                <section>
+                                    <table class="col-md-12">
+                                        <tr>
+                                            <td width="15%" style="text-align:center"><img src="@Url.Content(comment.Item1)" alt="IMAGES" style="height: 80px; overflow: hidden; display:inline-block" /></td>
+                                            <td width="20%"><pre class="pre">@comment.Item2</pre></td>
+                                            <td width="45%"><pre class="pre">@comment.Item3</pre></td>
+                                            <td width="20%"><pre class="pre">@comment.Item4</pre></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                </section>
+                            }
+                        }
+                    }
+                }
+            </div>
+<div>
+    <h3>Add new comment</h3>
+    <table class="col-md-12">
+        <tbody>
+            <tr>
+                <td width="30%">
+                    <input type="text" class="text" style="width: 100%">
+                    <input type="hidden" class="datetime" value="@DateTime.Now">
+                    <input type="hidden" class="article_id" value="@Model.ArticleId">
+                </td>
+                <td width="70%">
+                    <input type="button" value="Add comment" class="btn btn-default" id="Add">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<p>
+    <div>
+        @Html.ActionLink("To the blog", "SeeBlog", "Blog", new { blog_id = Model.BlogId }, new { style = "color:black" })
+    </div>
+</p>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Add").click(function () {
+                var url = "@Url.Action("AddComment"/*имя экшина*/, "Article"/*имя контроллера*/)";
+                var user_id = "";
+                //var user_name = $(this).parent().parent().find(".user_name").val();
+            var article_id = $(this).parent().parent().find(".article_id").val();
+                //var imagepath = $(this).parent().parent().find(".image").val();//$('div:eq(4)').val();
+                var text = $(this).parent().parent().find(".text").val();//$("form select[name=items] option:selected").val(); $("form select[userEmail=Email] option:selected").val();
+                var datetime = $(this).parent().parent().find(".datetime").val();
+                $.ajax({
+                    data: { "user_id": user_id, "article_id": article_id, /*"imagepath": imagepath,*/ "text": text, "datetime": datetime/*, "user_name":user_name */},
+                    url: url,
+                    type: "POST",
+                    success: function (result) {
+                        alert(result)
+                    }
+                })
+            });
+        });
+    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.bxslider.min.js")"></script>
+<script>
+        $(document).ready(function () {
+            $('.bxslider').bxSlider({
+                minSlides: 1,
+                maxSlides: 1,
+                slideMargin: 10
+            });
+        });
+</script>
+}
+
+
+

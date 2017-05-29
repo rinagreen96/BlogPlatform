@@ -1,0 +1,131 @@
+﻿@model ForBlogs.Models.ClientProfileModel
+    @{
+        <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+    }
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+@if (Model.Nickname != "")
+{
+<h2>Profile of @Model.Nickname</h2>
+}
+else
+{
+    <h2>Profile of @Model.Email</h2>
+}
+
+<div class="form-horizontal">
+
+    <table class="table col-md-12">
+        <tbody>
+            <tr>
+                <td rowspan="5" style="width:40%">
+                    <div>
+                        <img src="@Url.Content(Model.Avatar_path)" alt="IMAGES" height="255" style="position: relative" />
+                    </div>
+                </td>
+                <td style="width:30%">
+                    <div>
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
+                </td>
+                <td style="width:30%">
+                    <div style="font-weight: normal; font-size: large; text-align:left">
+                        @Html.DisplayFor(model => model.Email)
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:30%">
+                    <div>
+                        @Html.LabelFor(model => model.Sername,"Surname", htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
+                </td>
+                <td style="width:30%">
+                    <div style="font-weight: normal; font-size: large; text-align:left">
+                        @Html.DisplayFor(model => model.Sername)
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:30%">
+                    <div>
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
+                </td>
+                <td style="width:30%">
+                    <div style="font-weight: normal; font-size: large; text-align:left">
+                        @Html.DisplayFor(model => model.Name)
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:30%">
+                    <div>
+                        @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
+                </td>
+                <td style="width:30%">
+                    <div style="font-weight: normal; font-size: large; text-align:left">
+                        @Html.DisplayFor(model => model.Nickname)
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:30%">
+                    <div>
+                        @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                    </div>
+                </td>
+                <td style="width:30%">
+                    <div style="font-weight: normal; font-size: large; text-align:left">
+                        @Html.DisplayFor(model => model.City)
+                    </div>
+                </td>
+            </tr>
+            
+        </tbody>
+
+
+    </table>
+
+</div>
+<hr />
+<div class="col-md-12">
+    <table class="table_blog">
+        <tr>
+            <td>
+                @*<div>*@
+                @Html.LabelFor(model => model.Info,"Personal information", htmlAttributes: new { @class = "control-label" })
+                @*</div>*@
+            </td>
+        </tr>
+        <tr style="width: 100%">
+            <td>
+                <pre style="font-weight: normal; font-size: large; text-align:left; white-space:pre-wrap">@Html.Raw(Model.Info)</pre>
+            </td>
+        </tr>
+@if (Model.Email == ViewBag.CurrentUserName)
+{
+    <tr>
+        <td>
+
+            @using (Html.BeginForm("EditClientProfile", "Account", FormMethod.Get))
+            {
+                <input type="hidden" value="@Model.Email" class="btn btn-default" name="Email" />
+                <input type="submit" value="Edit" class="btn btn-default" />
+
+            }
+        </td>
+    </tr>
+}
+    </table>
+</div>
+
+<p>
+    <div class="col-md-2">@Html.ActionLink("To My Blogs", "GoToBlogs", "Account", new { UserEmail = ViewBag.CurrentUserName@*, UserNick = Model.Nickname*@ }, new { style = "color:black" })</div>
+    <div class="col-md-offset-10" style="text-align:right">@Html.ActionLink("See all Blogs", "SeeAllBlogs","Blog", new { style = "color:black" })</div>
+</p>

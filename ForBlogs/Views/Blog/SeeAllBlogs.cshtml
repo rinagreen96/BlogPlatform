@@ -1,0 +1,115 @@
+﻿@model IEnumerable<ForBlogs.Models.BlogModel>
+    @{ 
+<link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+
+        }
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js">
+</script>
+<h2>Blogs</h2>
+<div class="col-md-offset-10">
+    <form method="post" action="/Blog/SearchByTags">
+        <input type="text" name="all_tags"/>
+        <input type="submit" class="btn btn-default" value="Search by tags" />
+    </form>
+</div>
+<hr />
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Blogname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BlogDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_of_last_update)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserNickname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr style="font-weight: normal">
+                <td style="text-align:left">
+                    @Html.DisplayFor(modelItem => item.Blogname)
+                </td>
+                <td style="text-align:center">
+                    @Html.Raw(item.BlogDescription)
+                </td>
+                <td style="text-align:left">
+                    @Html.DisplayFor(modelItem => item.date_of_last_update)
+                </td>
+                <td style="text-align:left">
+                    @Html.ActionLink(@item.UserNickname,"GoToUserProfile","Blog", new { user_id=item.UserId}, new { style = "color:blue" })
+                </td>
+                <td style="text-align:left">
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td style="text-align:left">
+                    @using (Html.BeginForm("SeeBlog", "Blog"))
+                    {
+                        <input type="hidden" name="blog_id" value="@item.Id" />
+                        <input type="hidden" name="user_id" value="@item.UserId" />
+                        <input type="submit" value="To articles" class="btn btn-default" style="background: #222222; color: white; object-position: center">
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>
+    <div class="col-md-12" style="text-align:right">@Html.ActionLink("To My Blogs", "GoToBlogs", "Account", new { UserEmail = ViewBag.UserEmail}, new { style = "color:black" })</div>
+</p>
+@* Load datatable css *@
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+@* Load datatable js *@
+@section Scripts{
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table').DataTable({
+                columns: [
+                    {
+                        title: "Name of blog",
+                        "searchable": true
+                    },
+                    {
+                        title: "Description",
+                        "searchable": true
+                    },
+                    {
+                        title: "Updated",
+                        "searchable": true
+                    },
+                    {
+                        title: "User",
+                        "searchable": true
+                    },
+                    {
+                        title: "Category",
+                        "searchable": true
+                    },
+                    {
+                        title: "",
+                        "searchable": false
+                    }
+                ]
+            });
+        });
+    </script>
+}

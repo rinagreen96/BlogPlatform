@@ -1,0 +1,181 @@
+﻿@model ForBlogs.Models.ClientProfileModel
+
+@{
+    ViewBag.Title = "Edit your profile";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/ForUpload.css")" />
+}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: 'textarea', forced_root_block: '', plugins: "paste",
+        paste_remove_spans: true,
+        paste_remove_styles: true
+    });
+</script>
+<h2>Your profile</h2>
+
+@using (Html.BeginForm("EditClientProfile", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+        <table class="table col-md-12">
+            <tbody>
+                <tr>
+                    <td rowspan="8" style="width:40%">
+                        <div>
+                            <img height="360" style="position: relative; padding-top:25px" id="image" src="@Url.Content(Model.Avatar_path)" alt="" />
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div>
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:30%">
+                        <div>
+                            @Html.LabelFor(model => model.Sername,"Surname", htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div>
+                            @Html.EditorFor(model => model.Sername, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Sername)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:30%">
+                        <div>
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div>
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:30%">
+                        <div>
+                            @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div>
+                            @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Nickname)
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:30%">
+                        <div>
+                            @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div>
+                            @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.City)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:30%">
+                        <div>
+                            @Html.LabelFor(model => model.Avatar_path, "Avatar", htmlAttributes: new { @class = "control-label col-md-2" })
+                        </div>
+                    </td>
+                    <td style="width:30%">
+                        <div class="fileform">
+                            <div class="selectbutton" style="display:inline-block">Search</div>
+                            <input accept="image/*" style="display:inline-block" id="upload" type="file" name="upload" />
+                        </div>
+                        @*<div>
+                            <input accept="image/*" id="upload" name="upload" type="file" />
+                            @Html.ValidationMessageFor(model => model.Avatar_path)
+                        </div>*@
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.ID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Date_of_registration, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HiddenFor(model => model.Avatar_path, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="col-md-12">
+            <table class="table_blog">
+                <tr>
+                    <td>
+                        @*<div>*@
+                        @Html.LabelFor(model => model.Info, "Tell people more about yourself", htmlAttributes: new { @class = "control-label" })
+                        @*</div>*@
+                    </td>
+                </tr>
+                <tr style="width: 100%">
+                    <td>
+                        <textarea name="info" class="textarea" cols="1000">@Model.Info</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @*<div>*@
+                        <input type="submit" value="Save" class="btn btn-default" />
+                        @*</div>*@
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+}
+<p>
+    @Html.ActionLink("To My Blogs", "GoToBlogs", "Account", new { UserId = Model.ID, UserNick = Model.Nickname }, new { style = "color:black" })
+</p>
+
+@section Scripts{
+    <script type="text/javascript">
+        function readURL(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#upload").change(function () {
+            readURL(this);
+        });
+
+    </script>}
+
+

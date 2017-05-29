@@ -1,0 +1,189 @@
+﻿@model IEnumerable<ForBlogs.Models.ArticleModel>
+
+@{
+    ViewBag.Title = "ModeratorPage";
+    <link href="@Url.Content("~/Content/jquery.bxslider.css")" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+}
+<style>
+    .btn {
+        background: #222222;
+        color: white;
+        object-position: center;
+    }
+
+    .table td, .table tr {
+        padding: 10px;
+        font-style: normal;
+        text-align: center;
+        font-size: large;
+        position: relative;
+    }
+</style>
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
+
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js">
+</script>
+<h2></h2>
+
+<p style="font-style: italic; font-size: xx-large ">
+    Articles to be approven:
+</p>
+<table id="table" class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Text
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="font-weight: bolder" width="20%">
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td width="70%">
+                    @Html.Raw(item.text)
+                    @if (item.ImagesPaths != null)
+                    {
+                        if (item.ImagesPaths.Count() != 0)
+                        {
+                            <section>
+                                <ul class="bxslider">
+                                    @foreach (var image in item.ImagesPaths)
+                                    {
+                                        <li style="position:center"><img style="display:inline-block; height: 400px; overflow: hidden" src="@Url.Content(image)" /></li>
+                                    }
+                                </ul>
+
+                            </section>
+                        }
+                    }
+                </td>
+                <td width="10%">
+                    <form action="/Moderator/Approve">
+
+                        <input type="hidden" name="article_id" value="@item.ArticleId">
+                        <input type="submit" value="Approve" class="btn">
+
+                    </form>
+                    <p></p>
+                    <form action="/Moderator/Reject">
+
+                        <input type="hidden" name="article_id" value="@item.ArticleId">
+                        <input type="submit" value="Reject" class="btn">
+
+                    </form>
+                </td>
+            </tr>
+
+        }
+
+
+    </tbody>
+
+</table>
+
+<p style="font-style: italic; font-size: xx-large ">
+    Comments to be approven:
+</p>
+<table id="table1" class="table1">
+    <thead>
+        <tr>
+            <th>
+                Text
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item_com in ViewBag.Comments)
+        {
+            <tr>
+                <td>
+                    <pre>@item_com.text</pre>
+                </td>
+                <td width="10%">
+                    <form action="/Moderator/ApproveComment">
+
+                        <input type="hidden" name="comment_id" value="@item_com.comment_id">
+                        <input type="submit" value="Approve" class="btn">
+
+                    </form>
+                    <p></p>
+                    <form action="/Moderator/RejectComment">
+
+                        <input type="hidden" name="comment_id" value="@item_com.comment_id">
+                        <input type="submit" value="Reject" class="btn">
+
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+@* Load datatable css *@
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+@* Load datatable js *@
+@section Scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery.bxslider.min.js")"></script>
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table').DataTable({
+                columns: [
+                    {
+                        title: "Title",
+                        "searchable": true
+                    },
+                    {
+                        title: "Text",
+                        "searchable": true
+                    },
+                    {
+                        title: "",
+                        "searchable": false
+                    }
+                ]
+            });
+        });
+        $(document).ready(function () {
+            $('#table1').DataTable({
+                columns: [
+                    {
+                        title: "Text",
+                        "searchable": true
+                    },
+                    {
+                        title: "",
+                        "searchable": false
+                    }
+                ]
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.bxslider').bxSlider({
+                minSlides: 1,
+                maxSlides: 1,
+                //slideWidth: 170,
+                slideMargin: 10
+            });
+        });
+    </script>
+}

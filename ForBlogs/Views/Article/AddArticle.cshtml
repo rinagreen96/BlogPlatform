@@ -1,0 +1,106 @@
+﻿@model ForBlogs.Models.ArticleModel
+
+@{
+    ViewBag.Title = "AddArticle";
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/StyleForBlogs.css")" />
+    <link type="text/css" rel="StyleSheet" href="@Url.Content("~/Content/ForUpload.css")" />
+}
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+<script>
+tinymce.init({
+        selector: 'textarea', forced_root_block: '', plugins: "paste",
+        paste_remove_spans: true,
+        paste_remove_styles: true});</script>
+
+<h2>Add an article</h2>
+
+
+@using (Html.BeginForm(Html.BeginForm("AddArticle", "Article", FormMethod.Post, new { enctype = "multipart/form-data" })))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        <table class="table col-md-12">
+            <tbody>
+                <tr>
+                    <td style="width:25%">
+                        @Html.LabelFor(model => model.title,"Title",htmlAttributes: new { @class = "control-label col-md-2" })
+                    </td>
+                    <td style="width:25%">
+                        @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger", @style="color:red" })
+                    </td>
+                    <td style="width:25%">
+                        @Html.LabelFor(model => model.BlogName, "Blog", htmlAttributes: new { @class = "control-label col-md-2" })
+                    </td>
+                    <td style="width:25%">
+                        @Html.DisplayFor(model => model.BlogName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BlogName, "", new { @class = "text-danger" })
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div>@Html.LabelFor(model => model.text, "Text", htmlAttributes: new { @class = "control-label" })</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        @Html.TextAreaFor(model => model.text, new { htmlAttributes = new { @class = "form-control" } })
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:right">
+                        @Html.Label("Add pictures", new { htmlAttributes = new { @style = "text_align:right" } })
+                        
+                    </td>
+                    <td colspan="2" >
+                        <div class="fileform">
+                            <div class="selectbutton" style="display:inline-block">Search</div>
+                            <input accept="image/*" style="display:inline-block" id="upload" type="file" name="upload" multiple="multiple" />
+                        </div>
+                        <div class="row">
+                            <span id="outputMulti"></span>
+                        </div>
+                        @Html.HiddenFor(model => model.ImagesPaths)
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @if (Model.ImagesPaths != null)
+        {
+            if (Model.ImagesPaths.Count() != 0)
+            {
+                for (int i = 0; i < Model.ImagesPaths.Count(); i++)
+                {
+            <div class="form-group">
+                <div class="col-md-5">
+                    <img src="@Url.Content(Model.ImagesPaths.ToList()[i])" alt="IMAGES" style="width: 100%; height: 300px" />
+                    @Html.HiddenFor(model => model.ImagesPaths[i])
+                </div>
+            </div>
+                }
+            }
+        }
+
+        <div class="form-group">
+            @Html.HiddenFor(model=>model.UserId)
+            </div>
+        <div class="form-group">
+            @Html.HiddenFor(model => model.BlogId)
+        </div>
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Back", "EditBlog","Blog",new { blog_id = Model.BlogId}, new { style = "color:black" })
+</div>
+
